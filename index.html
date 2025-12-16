@@ -1645,11 +1645,9 @@
                 <button class="menu-item" onclick="showPage('verify-deposit')">
                     <i class="fas fa-check-circle"></i> Verify Deposit
                 </button>
-                <!-- LOAN UNDER MAINTENANCE - Remove this comment to enable
                 <button class="menu-item loan-menu-item" onclick="openLoanTerms()">
                     <i class="fas fa-hand-holding-usd"></i> Get Loan
                 </button>
-                LOAN UNDER MAINTENANCE -->
                 <div class="menu-divider"></div>
                 <button class="menu-item" onclick="showPage('bulk-sms')">
                     <i class="fas fa-sms"></i> Bulk SMS
@@ -1705,12 +1703,10 @@
                             <i class="fas fa-history"></i>
                             <span>History</span>
                         </button>
-                        <!-- LOAN UNDER MAINTENANCE - Remove this comment to enable
                         <button class="action-card" onclick="openLoanTerms()">
                             <i class="fas fa-hand-holding-usd"></i>
                             <span>Get Loan</span>
                         </button>
-                        LOAN UNDER MAINTENANCE -->
                         <button class="action-card" onclick="showPage('airtime-to-cash')">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Airtime to Cash</span>
@@ -3640,7 +3636,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const API_BASE = 'https://pesahubbk.onrender.com';
+        const API_BASE = 'https://airtimesolutionbackend2.onrender.com';
 
         let currentUser = null;
         let adminLoggedIn = false;
@@ -3745,25 +3741,11 @@
             document.getElementById('balanceOverlay').classList.remove('show');
         }
 
-        showLoading('Checking authentication...');
-        
         onAuthStateChanged(auth, async (user) => {
             const email = localStorage.getItem('userEmail');
-            
             if (user && email) {
                 await loadUserData(email);
-            } else if (user && !email) {
-                localStorage.setItem('userEmail', user.email);
-                localStorage.setItem('firebaseUid', user.uid);
-                await loadUserData(user.email);
-            } else if (!user && email) {
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('firebaseUid');
-                localStorage.removeItem('cachedBalance');
-                hideLoading();
-                showAuthModal();
-            } else {
-                hideLoading();
+            } else if (!email) {
                 showAuthModal();
             }
         });
