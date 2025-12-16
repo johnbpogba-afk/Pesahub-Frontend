@@ -3753,7 +3753,7 @@
         async function loadUserData(email) {
             try {
                 showLoading('Loading your account...');
-                const response = await fetch(`${API_BASE}/api/users/by-email/${encodeURIComponent(email)}`);
+                const response = await fetch(`${API_BASE}/api/users/by-email/${encodeURIComponent(email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     currentUser = { ...data.user, email };
@@ -3819,7 +3819,7 @@
         async function silentRefreshBalance() {
             if (!currentUser) return;
             try {
-                const response = await fetch(`${API_BASE}/api/users/balance-by-email/${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`${API_BASE}/api/users/balance-by-email/${encodeURIComponent(currentUser.email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     currentUser.balance = data.balance;
@@ -3840,7 +3840,7 @@
         async function silentRefreshTransactions() {
             if (!currentUser) return;
             try {
-                const response = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(currentUser.email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     renderTransactions(data.transactions);
@@ -3855,7 +3855,7 @@
             const btn = document.getElementById('refreshBtn');
             btn.classList.add('spinning');
             try {
-                const response = await fetch(`${API_BASE}/api/users/balance-by-email/${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`${API_BASE}/api/users/balance-by-email/${encodeURIComponent(currentUser.email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     currentUser.balance = data.balance;
@@ -3872,7 +3872,7 @@
         async function loadNotifications() {
             if (!currentUser) return;
             try {
-                const response = await fetch(`${API_BASE}/api/notifications/${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`${API_BASE}/api/notifications/${encodeURIComponent(currentUser.email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     renderNotifications(data.notifications);
@@ -3907,7 +3907,7 @@
 
         window.markNotificationRead = async function(id) {
             try {
-                await fetch(`${API_BASE}/api/notifications/${id}/read`, { method: 'PUT' });
+                await fetch(`${API_BASE}/api/notifications/${id}/read`, { method: 'PUT', credentials: 'include' });
                 loadNotifications();
             } catch (error) {
                 console.error('Failed to mark as read:', error);
@@ -3917,7 +3917,7 @@
         async function loadTransactions() {
             if (!currentUser) return;
             try {
-                const response = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(currentUser.email)}`);
+                const response = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(currentUser.email)}`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     renderTransactions(data.transactions);
@@ -4256,6 +4256,7 @@
                 const response = await fetch(`${API_BASE}/api/payments/deposit`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email: currentUser.email, phone: phone, amount: amount })
                 });
                 const data = await response.json();
@@ -4313,7 +4314,7 @@
                 statusText.textContent = `Checking payment status... (${attempts}/${maxAttempts})`;
                 
                 try {
-                    const response = await fetch(`${API_BASE}/api/payments/status/${reference}`);
+                    const response = await fetch(`${API_BASE}/api/payments/status/${reference}`, { credentials: 'include' });
                     const data = await response.json();
                     
                     if (data.success && data.transaction.status === 'completed') {
@@ -4386,6 +4387,7 @@
                 const response = await fetch(`${API_BASE}/api/airtime/buy`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email: currentUser.email, phone: phone, amount: amount })
                 });
                 const data = await response.json();
@@ -4421,6 +4423,7 @@
                 const response = await fetch(`${API_BASE}/api/airtime/direct`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ phone_to_receive: '254' + phone, phone_to_pay: '254' + phone, amount: parseInt(amount) })
                 });
                 const data = await response.json();
@@ -4449,7 +4452,7 @@
 
         async function checkFloatStatus() {
             try {
-                const response = await fetch(`${API_BASE}/api/airtime/float-status`);
+                const response = await fetch(`${API_BASE}/api/airtime/float-status`, { credentials: 'include' });
                 const data = await response.json();
                 if (data.success) {
                     floatAvailable = !data.floatLow;
@@ -4487,6 +4490,7 @@
                 const response = await fetch(`${API_BASE}/api/airtime/buy`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email: currentUser.email, phone: phone, amount: amount })
                 });
                 const data = await response.json();
@@ -4541,6 +4545,7 @@
                 const response = await fetch(`${API_BASE}/api/payments/deposit`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email: currentUser.email, phone: phone, amount: amount })
                 });
                 const data = await response.json();
@@ -4606,6 +4611,7 @@
                 const response = await fetch(`${API_BASE}/api/payments/verify-deposit`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email: currentUser.email, mpesa_code: mpesaCode })
                 });
                 const data = await response.json();
@@ -4719,7 +4725,7 @@
                 clearTimeout(profilePhoneCheckTimeout);
                 profilePhoneCheckTimeout = setTimeout(async () => {
                     try {
-                        const response = await fetch(`${API_BASE}/api/users/check-phone/254${phone}`);
+                        const response = await fetch(`${API_BASE}/api/users/check-phone/254${phone}`, { credentials: 'include' });
                         const data = await response.json();
                         if (data.exists && data.email !== currentUser?.email) {
                             duplicateError.classList.add('show');
@@ -5155,6 +5161,7 @@
                 const response = await fetch(`${API_BASE}/api/airtime/direct`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         phone_to_receive: `254${phone}`,
                         phone_to_pay: `254${payPhone}`,
@@ -5203,7 +5210,7 @@
                 }
                 
                 try {
-                    const response = await fetch(`${API_BASE}/api/airtime/direct/status/${reference}`);
+                    const response = await fetch(`${API_BASE}/api/airtime/direct/status/${reference}`, { credentials: 'include' });
                     const data = await response.json();
                     
                     if (data.status === 'completed') {
@@ -5617,6 +5624,7 @@
                 const response = await fetch(`${API_BASE}/api/loan/stk-push`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         phone: phone,
                         amount: amount,
@@ -5667,7 +5675,7 @@
                 }
                 
                 try {
-                    const response = await fetch(`${API_BASE}/api/loan/payment-status/${requestId}`);
+                    const response = await fetch(`${API_BASE}/api/loan/payment-status/${requestId}`, { credentials: 'include' });
                     const data = await response.json();
                     
                     if (data.status === 'completed' || data.success) {
